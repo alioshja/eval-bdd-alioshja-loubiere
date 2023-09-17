@@ -15,6 +15,15 @@ INSERT INTO Tarifs (TypeTarifs, Tarifs) VALUES
 ('Adulte', '9,20');
 --________________________________________________________
 
+CREATE TABLE Films_Tarifs (
+    TarifId INT,
+    FilmId INT,
+    FOREIGN KEY (TarifId) REFERENCES Tarifs(Id),
+    FOREIGN KEY (FilmId) REFERENCES Films(Id)
+)
+
+--________________________________________________________
+
 CREATE TABLE ville (
 NomDeVilles VARCHAR(40) NOT NULL,
 Id INT AUTO_INCREMENT PRIMARY KEY
@@ -28,14 +37,18 @@ INSERT INTO ville (nomDeVilles) VALUES ('Bordeaux'),
 
 --________________________________________________________
 
-CREATE TABLE films_villes (
--id villes_film  (étrangère) : int
--id film_villes (étrangère) : int
+CREATE TABLE Films_Villes (
+    Id INT AUTO_INCREMENT PRIMARY KEY,
+    FilmId INT,
+    VilleId INT,
+    FOREIGN KEY (FilmId) REFERENCES Films(Id),
+    FOREIGN KEY (VilleId) REFERENCES Ville(Id)
 );
 
 --________________________________________________________
 
 CREATE TABLE Films (
+    Id INT AUTO_INCREMENT PRIMARY KEY,
     Film VARCHAR(30) NOT NULL,
     Durée VARCHAR(30) NOT NULL,
     Auteur VARCHAR(30) NOT NULL,
@@ -52,15 +65,18 @@ INSERT INTO Films (Film, Durée, Auteur, AgeConseillée, Note) VALUES
 
 --________________________________________________________
 
-CREATE TABLE films_horaires (
-films_horaires INT  Foreign Key () REFERENCES ()
-id_horaires_films INT  Foreign Key () REFERENCES ()
+CREATE TABLE Films_Horaires (
+    Id INT AUTO_INCREMENT PRIMARY KEY,
+    FilmId INT,
+    HoraireId INT,
+    FOREIGN KEY (FilmId) REFERENCES Films(Id),
+    FOREIGN KEY (HoraireId) REFERENCES Horaires(Id)
 );
-
 
 --________________________________________________________
 
  CREATE TABLE horaires (
+    Id INT AUTO_INCREMENT PRIMARY KEY,
     séance VARCHAR(5)
  );
 
@@ -74,12 +90,24 @@ INSERT INTO horaires (séance) VALUES
 ('22H'),
 ('24H'),
 ('2H');
+--________________________________________________________
+
+CREATE TABLE Cinema (
+    Id INT AUTO_INCREMENT PRIMARY KEY,
+    VilleId INT,
+    FOREIGN KEY (VilleId) REFERENCES Ville(Id)
+);
 
 --________________________________________________________
 --________________________________________________________
 --________________________________________________________
 
-SELECT * FROM ville 
-RIGHT JOIN cinema ON ville.`Id` = ville.`Id`
-RIGHT JOIN ville a ON horaires.séance = horaires.séance;
-JOIN horaires ON tarifs.`Id`;
+SELECT Tarifs.TypeTarifs, Films.Film, Ville.NomDeVilles, Horaires.séance
+FROM Tarifs
+JOIN Films_Tarifs ON Tarifs.Id = Films_Tarifs.TarifId
+JOIN Films ON Films_Tarifs.FilmId = Films.Id
+JOIN Films_Villes ON Films.Id = Films_Villes.FilmId
+JOIN Ville ON Films_Villes.VilleId = Ville.Id
+JOIN Films_Horaires ON Films.Id = Films_Horaires.FilmId
+JOIN Horaires ON Films_Horaires.HoraireId = Horaires.Id;
+
