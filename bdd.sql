@@ -99,7 +99,16 @@ CREATE TABLE Cinema (
 );
 
 --________________________________________________________
+
+CREATE TABLE modération (
+    Id INT AUTO_INCREMENT PRIMARY KEY,
+    mot_de_passe VARCHAR(50)
+)
+
 --________________________________________________________
+
+INSERT INTO modération (mot_de_passe) VALUES ('JojoLeNarvalo112299'),('AldricLeCinéphille499876'),('ElPatron002009001')
+
 --________________________________________________________
 
 SELECT Tarifs.TypeTarifs, Films.Film, Ville.NomDeVilles, Horaires.séance
